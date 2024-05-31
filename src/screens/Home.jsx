@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { FaRegCopy } from "react-icons/fa";
 import { Toaster, toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [showCreateGame, setShowCreateGame] = useState(false);
   const [showJoinGame, setShowJoinGame] = useState(false);
   const [code, setCode] = useState();
+  const navigate = useNavigate();
 
   const createGameHandler = () => {
     setShowCreateGame(true);
@@ -71,7 +73,10 @@ const Home = () => {
                   <FaRegCopy />
                 </button>
               </div>
-              <button className="bg-green-500 px-6 py-1 rounded-xl text-lg font-bold">
+              <button
+                onClick={() => navigate(`/game/${code}`)}
+                className="bg-green-500 px-6 py-1 rounded-xl text-lg font-bold"
+              >
                 Create
               </button>
             </div>
