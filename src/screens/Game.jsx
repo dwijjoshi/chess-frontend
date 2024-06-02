@@ -5,13 +5,13 @@ const Game = () => {
   const params = useParams();
   console.log(params.code);
   const [socket, setSocket] = useState();
-  const ws = new WebSocket("ws://localhost:8000");
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8000");
+    const ws = new WebSocket("ws://localhost:8080");
     ws.onopen = () => {
       setSocket(ws);
     };
+    console.log(socket);
 
     ws.onclose = () => {
       setSocket(null);
@@ -26,7 +26,7 @@ const Game = () => {
     socket.send(
       JSON.stringify({
         type: "create",
-        code: params.code,
+        code: "dwij2",
       })
     );
   }, []);
@@ -55,7 +55,15 @@ const Game = () => {
     };
   }, [socket]);
 
-  return <div>{socket ? <div>Game</div> : <div>Connecting...</div>}</div>;
+  return (
+    <div>
+      {socket ? (
+        <div className="bg-blue-500">Play</div>
+      ) : (
+        <div>Connecting...</div>
+      )}
+    </div>
+  );
 };
 
 export default Game;
