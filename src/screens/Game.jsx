@@ -23,15 +23,6 @@ const Game = () => {
   }, []);
 
   useEffect(() => {
-    socket.send(
-      JSON.stringify({
-        type: "create",
-        code: "dwij2",
-      })
-    );
-  }, []);
-
-  useEffect(() => {
     if (!socket) {
       return;
     }
@@ -58,7 +49,19 @@ const Game = () => {
   return (
     <div>
       {socket ? (
-        <div className="bg-blue-500">Play</div>
+        <div
+          className="bg-blue-500"
+          onClick={() => {
+            socket.send(
+              JSON.stringify({
+                type: "create",
+                code: "dwij2",
+              })
+            );
+          }}
+        >
+          Play
+        </div>
       ) : (
         <div>Connecting...</div>
       )}

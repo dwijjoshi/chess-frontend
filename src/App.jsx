@@ -4,14 +4,12 @@ import Home from "./screens/Home";
 import Game from "./screens/Game";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <div className="bg-[#2b2a2a]">
       <Router>
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/game/" element={<Game />}></Route>
+          <Route path="/game/:code" element={<Game />}></Route>
         </Routes>
       </Router>
     </div>

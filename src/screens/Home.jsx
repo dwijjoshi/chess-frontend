@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { FaRegCopy } from "react-icons/fa";
 import { Toaster, toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { changeGameType } from "../slices/gameSlice";
 const Home = () => {
   const [showCreateGame, setShowCreateGame] = useState(false);
   const [showJoinGame, setShowJoinGame] = useState(false);
   const [code, setCode] = useState();
+  const [codeInput, setCodeInput] = useState("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const createGameHandler = () => {
+  const showCreateGameHandler = () => {
     setShowCreateGame(true);
     setShowJoinGame(false);
     const code = generateRandomCode();
@@ -17,9 +20,25 @@ const Home = () => {
     console.log(code);
   };
 
-  const joinGameHandler = () => {
+  const showJoinGameHandler = () => {
     setShowJoinGame(true);
     setShowCreateGame(false);
+  };
+
+  const handleCreateGame = () => {
+    dispatch(changeGameType("create"));
+    navigate(`/game/${code}`);
+  };
+
+  const handleJoinGame = () => {
+    dispatch(changeGameType("join"));
+    navigate(`/game/${codeInput}`);
+  };
+
+  const handleCodeInput = (e) => {
+    console.log(e.target.value);
+    e.preventDefault();
+    setCodeInput(e.target.value);
   };
 
   const generateRandomCode = () => {
@@ -46,13 +65,13 @@ const Home = () => {
           </h1>
           <div className="flex  gap-y-6 gap-x-6 mt-10">
             <button
-              onClick={createGameHandler}
+              onClick={showCreateGameHandler}
               className="bg-green-500 px-8 py-3 rounded-xl text-xl font-bold"
             >
               Create Game
             </button>
             <button
-              onClick={joinGameHandler}
+              onClick={showJoinGameHandler}
               className="bg-green-500 px-8 py-3 rounded-xl text-xl font-bold"
             >
               Join Game
@@ -74,7 +93,7 @@ const Home = () => {
                 </button>
               </div>
               <button
-                onClick={() => navigate(`/game/${code}`)}
+                onClick={handleCreateGame}
                 className="bg-green-500 px-6 py-1 rounded-xl text-lg font-bold"
               >
                 Create
@@ -89,9 +108,13 @@ const Home = () => {
                   type="text"
                   className=" bg-slate-300  rounded-lg px-3 py-2 placeholder-black outline-none"
                   placeholder="Enter the game code"
+                  onChange={handleCodeInput}
                 />
               </div>
-              <button className="bg-green-500 px-6 py-1 rounded-xl text-lg font-bold">
+              <button
+                onClick={handleJoinGame}
+                className="bg-green-500 px-6 py-1 rounded-xl text-lg font-bold"
+              >
                 Join
               </button>
             </div>
