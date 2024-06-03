@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 const Game = () => {
   const params = useParams();
   console.log(params.code);
   const [socket, setSocket] = useState();
+  const gameType = useSelector((state) => state.game.type);
+  console.log(gameType, "gameType");
 
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:8080");
@@ -46,20 +49,28 @@ const Game = () => {
     };
   }, [socket]);
 
+  const playHandler = () => {
+    if (gameType === "create") {
+      socket.send(
+        JSON.stringify({
+          type: "create",
+          code: params.code,
+        })
+      );
+    } else if (gameType === "join") {
+      socket.send(
+        JSON.stringify({
+          type: "join",
+          code: params.code,
+        })
+      );
+    }
+  };
+
   return (
     <div>
       {socket ? (
-        <div
-          className="bg-blue-500"
-          onClick={() => {
-            socket.send(
-              JSON.stringify({
-                type: "create",
-                code: "dwij2",
-              })
-            );
-          }}
-        >
+        <div className="bg-blue-500" onClick={playHandler}>
           Play
         </div>
       ) : (
