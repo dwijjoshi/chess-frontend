@@ -39,7 +39,6 @@ const Game = () => {
       console.log(message);
       switch (message.type) {
         case "create":
-          setChess(new Chess());
           setBoard(chess.board());
           console.log("Game initialized successfully");
           break;
@@ -82,7 +81,12 @@ const Game = () => {
       <div className="pt-8 max-w-screen-lg w-full">
         <div className="grid grid-cols-6 gap-4 w-full h-screen">
           <div className="col-span-4 w-full flex justify-center">
-            <Board board={board} />
+            <Board
+              chess={chess}
+              setBoard={setBoard}
+              socket={socket}
+              board={board}
+            />
           </div>
           <div className="col-span-2 bg-green-200 w-full">
             <button onClick={playHandler}>Play</button>
