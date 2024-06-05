@@ -1,29 +1,36 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Board = ({ board, socket, setBoard, chess }) => {
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
+  const type = useSelector((state) => state.game.type);
 
   const handleCellClick = (square, squareRepresentation) => {
-    if (!from) {
-      setFrom(squareRepresentation);
-    } else {
-      socket.send(
-        JSON.stringify({
-          type: "move",
-          move: {
-            from,
-            to: squareRepresentation,
-          },
-        })
-      );
-      setFrom(null);
-      chess.move({
-        from,
-        to: squareRepresentation,
-      });
-      setBoard(chess.board());
-    }
+    if (
+      (type === "join" && chess._turn === "b") ||
+      (type === "create" && chess._turn === "w")
+    )
+      if (!from) {
+        setFrom(squareRepresentation);
+      } else {
+        socket.send(
+          JSON.stringify({
+            type: "move",
+            move: {
+              from,
+              to: squareRepresentation,
+            },
+          })
+        );
+        setFrom(null);
+        chess.move({
+          from,
+          to: squareRepresentation,
+        });
+        console.log(chess);
+        setBoard(chess.board());
+      }
   };
   return (
     <div className="text-white-200">
@@ -41,7 +48,11 @@ const Board = ({ board, socket, setBoard, chess }) => {
                     (i + j) % 2 ? "bg-[#729551]" : "bg-[#ececd0]"
                   }`}
                 >
-                  {square ? square.type : ""}
+                  <div className="w-full justify-center flex h-full">
+                    <div className="h-full justify-center flex flex-col">
+                      {square ? square.type : null}
+                    </div>
+                  </div>
                 </div>
               );
             })}

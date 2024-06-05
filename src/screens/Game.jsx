@@ -10,8 +10,11 @@ const Game = () => {
   const [socket, setSocket] = useState();
   const [chess, setChess] = useState(new Chess());
   const [board, setBoard] = useState(chess.board());
+  const [timeMinutes, setTimeMinutes] = useState(10);
+  const [timeSeconds, setTimeSeconds] = useState(60);
+  const [oppTimeMinutes, setOppTimeMinutes] = useState(10);
+  const [oppTimeSeconds, setOppTimeSeconds] = useState(60);
   const gameType = useSelector((state) => state.game.type);
-  console.log(gameType, "gameType");
 
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:8080");
@@ -44,7 +47,7 @@ const Game = () => {
           break;
 
         case "join":
-          setChess(new Chess());
+          // setChess(new Chess());
           console.log("Game initialized successfully");
           break;
 
@@ -52,11 +55,37 @@ const Game = () => {
           const move = message.payload;
           chess.move(move);
           setBoard(chess.board());
-          console.log("move");
+
           break;
       }
     };
   }, [socket]);
+
+  useEffect(() => {
+    console.log(chess, "chess");
+    if (chess._turn === "w") {
+      setInterval(() => {
+        if (chess._turn === "w") {
+          clearInterval(this);
+        } else {
+          setTimeSeconds((prev) => prev - 1);
+          if (timeSeconds === 0) {
+            setTimeMinutes((prev) => prev - 1);
+            setTimeSeconds(60);
+          }
+        }
+      }, 1000);
+    }
+    if (chess._turn === "b") {
+      setInterval(() => {
+        setOppTimeSeconds((prev) => prev - 1);
+        if (timeSeconds === 0) {
+          setOppTimeMinutes((prev) => prev - 1);
+          setOppTimeSeconds(60);
+        }
+      }, 1000);
+    }
+  }, [chess]);
 
   const playHandler = () => {
     if (gameType === "create") {
@@ -90,6 +119,12 @@ const Game = () => {
           </div>
           <div className="col-span-2 bg-green-200 w-full">
             <button onClick={playHandler}>Play</button>
+            <div>
+              White : {timeMinutes}:{timeSeconds}
+            </div>
+            <div>
+              Black : {oppTimeMinutes}:{oppTimeSeconds}
+            </div>
           </div>
         </div>
       </div>
