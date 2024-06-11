@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { decrementOppSeconds } from "../slices/gameSlice";
 
 const Board = ({ board, socket, setBoard, chess }) => {
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
   const type = useSelector((state) => state.game.type);
+  const dispatch = useDispatch();
 
   const handleCellClick = (square, squareRepresentation) => {
     if (
@@ -28,8 +30,17 @@ const Board = ({ board, socket, setBoard, chess }) => {
           from,
           to: squareRepresentation,
         });
-        console.log(chess);
+        console.log(chess, "chess test");
         setBoard(chess.board());
+        if (chess._turn === "w") {
+          const whiteTimer = setInterval(() => {
+            if (chess._turn === "b") {
+              clearInterval(whiteTimer);
+            } else {
+              dispatch(decrementOppSeconds());
+            }
+          }, 1000);
+        }
       }
   };
   return (
