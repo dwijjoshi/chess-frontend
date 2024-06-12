@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { decrementOppSeconds } from "../slices/gameSlice";
 
-const Board = ({ board, socket, setBoard, chess }) => {
+const Board = ({
+  board,
+  socket,
+  setBoard,
+  chess,
+  setWhiteTimeSeconds,
+  setBlackTimeSeconds,
+}) => {
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
   const type = useSelector((state) => state.game.type);
@@ -32,13 +39,15 @@ const Board = ({ board, socket, setBoard, chess }) => {
         });
         console.log(chess, "chess test");
         setBoard(chess.board());
-        if (chess._turn === "w") {
-          const whiteTimer = setInterval(() => {
-            if (chess._turn === "b") {
-              clearInterval(whiteTimer);
-            } else {
-              dispatch(decrementOppSeconds());
-            }
+        if (chess._turn === "b") {
+          clearInterval(whiteTime);
+          var blackTime = setInterval(() => {
+            setBlackTimeSeconds((prev) => prev - 1);
+          }, 1000);
+        } else if (chess._turn === "w") {
+          clearInterval(blackTime);
+          var whiteTime = setInterval(() => {
+            setWhiteTimeSeconds((prev) => prev - 1);
           }, 1000);
         }
       }

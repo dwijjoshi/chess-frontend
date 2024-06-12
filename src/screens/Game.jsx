@@ -12,8 +12,8 @@ const Game = () => {
   const [board, setBoard] = useState(chess.board());
 
   const gameType = useSelector((state) => state.game.type);
-  const timeSeconds = useSelector((state) => state.game.timeSeconds);
-  const timeOppSeconds = useSelector((state) => state.game.timeOppSeconds);
+  const [whiteTimeSeconds, setWhiteTimeSeconds] = useState(60);
+  const [blackTimeSeconds, setBlackTimeSeconds] = useState(60);
 
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:8080");
@@ -54,6 +54,18 @@ const Game = () => {
           const move = message.payload;
           chess.move(move);
           setBoard(chess.board());
+          console.log(chess, "testing move");
+          if (chess._turn === "b") {
+            clearInterval(whiteTime);
+            var blackTime = setInterval(() => {
+              setBlackTimeSeconds((prev) => prev - 1);
+            }, 1000);
+          } else if (chess._turn === "w") {
+            clearInterval(blackTime);
+            var whiteTime = setInterval(() => {
+              setWhiteTimeSeconds((prev) => prev - 1);
+            }, 1000);
+          }
 
           break;
       }
@@ -115,12 +127,14 @@ const Game = () => {
               setBoard={setBoard}
               socket={socket}
               board={board}
+              setWhiteTimeSeconds={setWhiteTimeSeconds}
+              setBlackTimeSeconds={setBlackTimeSeconds}
             />
           </div>
           <div className="col-span-2 bg-green-200 w-full">
             <button onClick={playHandler}>Play</button>
-            <div>White : {timeSeconds}</div>
-            <div>Black : {timeOppSeconds}</div>
+            <div>White : {whiteTimeSeconds}</div>
+            <div>Black : {blackTimeSeconds}</div>
           </div>
         </div>
       </div>
