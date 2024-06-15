@@ -42,11 +42,17 @@ const Board = ({
         if (chess._turn === "b") {
           clearInterval(whiteTime);
           var blackTime = setInterval(() => {
+            if (chess._turn === "w") {
+              clearInterval(blackTime);
+            }
             setBlackTimeSeconds((prev) => prev - 1);
           }, 1000);
         } else if (chess._turn === "w") {
           clearInterval(blackTime);
           var whiteTime = setInterval(() => {
+            if (chess._turn === "b") {
+              clearInterval(whiteTime);
+            }
             setWhiteTimeSeconds((prev) => prev - 1);
           }, 1000);
         }

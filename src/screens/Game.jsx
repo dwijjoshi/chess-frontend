@@ -55,12 +55,12 @@ const Game = () => {
           chess.move(move);
           setBoard(chess.board());
           console.log(chess, "testing move");
-          if (chess._turn === "b") {
+          if (chess._turn === "b" && gameType === "join") {
             clearInterval(whiteTime);
             var blackTime = setInterval(() => {
               setBlackTimeSeconds((prev) => prev - 1);
             }, 1000);
-          } else if (chess._turn === "w") {
+          } else if (chess._turn === "w" && gameType === "create") {
             clearInterval(blackTime);
             var whiteTime = setInterval(() => {
               setWhiteTimeSeconds((prev) => prev - 1);
